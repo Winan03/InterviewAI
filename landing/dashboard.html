@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VozInterview — Mi Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Dashboard-specific styles */
+        .dashboard-container {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-header h1 {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 24px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .dashboard-header .user-greeting {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .dashboard-card {
+            background: rgba(15, 15, 25, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.15);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            margin-bottom: 24px;
+            backdrop-filter: blur(20px);
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .plan-badge.free {
+            background: rgba(100, 100, 120, 0.3);
+            color: #888;
+            border: 1px solid rgba(100, 100, 120, 0.4);
+        }
+
+        .plan-badge.premium {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.15), rgba(208, 0, 255, 0.15));
+            color: var(--neon-cyan);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .plan-status {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .plan-status .expires {
+            color: var(--neon-cyan);
+        }
+
+        .dashboard-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-dashboard {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-upgrade {
+            background: linear-gradient(135deg, #00f3ff, #d000ff);
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            font-size: 16px;
+        }
+
+        .btn-upgrade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 243, 255, 0.4), 0 4px 15px rgba(208, 0, 255, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-download {
+            background: rgba(0, 243, 255, 0.15);
+            color: #00f3ff;
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+        }
+
+        .btn-download:hover {
+            background: rgba(0, 243, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .btn-download.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-shadow: none;
+        }
+
+        .btn-logout {
+            background: rgba(255, 70, 70, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 70, 70, 0.35);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 70, 70, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .payment-alert {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .payment-alert.success {
+            background: rgba(0, 255, 100, 0.1);
+            border: 1px solid rgba(0, 255, 100, 0.3);
+            color: #00ff64;
+        }
+
+        .payment-alert.cancelled {
+            background: rgba(255, 200, 0, 0.1);
+            border: 1px solid rgba(255, 200, 0, 0.3);
+            color: #ffc800;
+        }
+
+        .payment-alert.error {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            color: #ff5555;
+        }
+
+        .loading-state {
+            color: var(--neon-cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            text-decoration: none;
+            margin-top: 16px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--neon-cyan);
+        }
+
+        .features-preview {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .features-preview h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .features-preview ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-preview li {
+            font-size: 12px;
+            color: var(--text-secondary);
+            padding: 4px 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .features-preview li .check {
+            color: var(--neon-cyan);
+            margin-right: 8px;
+        }
+
+        .features-preview li .cross {
+            color: #555;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container" id="dashboardApp">
+        <div class="loading-state" id="loadingState">⏳ Cargando panel...</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        // Check URL params for payment status
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentStatus = urlParams.get('payment');
+
+        // Get auth data
+        const token = localStorage.getItem('voz_token');
+        const userData = JSON.parse(localStorage.getItem('voz_user') || 'null');
+
+        if (!token || !userData) {
+            window.location.href = 'auth.html';
+        }
+
+        async function loadDashboard() {
+            const container = document.getElementById('dashboardApp');
+
+            try {
+                // Verify token and get fresh user data
+                const meRes = await fetch(`${API_BASE}/api/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+
+                if (!meRes.ok) {
+                    localStorage.removeItem('voz_token');
+                    localStorage.removeItem('voz_user');
+                    window.location.href = 'auth.html';
+                    return;
+                }
+
+                const user = await meRes.json();
+
+                // Get subscription status
+                const statusRes = await fetch(`${API_BASE}/api/payments/status`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+                const subStatus = statusRes.ok ? await statusRes.json() : { plan: 'free', is_premium: false };
+
+                renderDashboard(container, user, subStatus);
+
+            } catch (err) {
+                container.innerHTML = `
+                    <div class="payment-alert error">❌ Error de conexión: ${err.message}</div>
+                    <a href="auth.html" class="back-link">← Volver al login</a>
+                `;
+            }
+        }
+
+        function renderDashboard(container, user, subStatus) {
+            const isPremium = subStatus.is_premium;
+            const expiresAt = subStatus.expires_at ? new Date(subStatus.expires_at) : null;
+            const daysLeft = expiresAt ? Math.ceil((expiresAt - new Date()) / (1000 * 60 * 60 * 24)) : 0;
+
+            let alertHtml = '';
+            if (paymentStatus === 'success') {
+                alertHtml = '<div class="payment-alert success">✅ ¡Pago exitoso! Tu plan Premium ha sido activado.</div>';
+            } else if (paymentStatus === 'cancelled') {
+                alertHtml = '<div class="payment-alert cancelled">⚠️ Pago cancelado. Puedes intentar de nuevo.</div>';
+            }
+
+            container.innerHTML = `
+                ${alertHtml}
+
+                <div class="dashboard-header">
+                    <h1>🎙️ VOZ<span style="color: var(--neon-magenta)">INTERVIEW</span></h1>
+                    <div class="user-greeting">Hola, <strong>${user.name}</strong> (${user.email})</div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-secondary);">Tu Plan Actual</span>
+                        <span class="plan-badge ${isPremium ? 'premium' : 'free'}">${isPremium ? '⭐ Premium' : 'Free'}</span>
+                    </div>
+
+                    ${isPremium ? `
+                        <div class="plan-status">
+                            Activo hasta: <span class="expires">${expiresAt.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                            <br>(${daysLeft} días restantes)
+                        </div>
+                    ` : `
+                        <div class="plan-status" style="color: #888;">
+                            Plan gratuito — funciones limitadas
+                        </div>
+                    `}
+
+                    <div class="features-preview">
+                        <h4>${isPremium ? 'Incluido en tu plan' : 'Desbloquea con Premium ($14.99/mes)'}</h4>
+                        <ul>
+                            ${isPremium ? `
+                                <li><span class="check">✓</span> Entrevistas ilimitadas</li>
+                                <li><span class="check">✓</span> Sin límite de tiempo</li>
+                                <li><span class="check">✓</span> Respuestas IA premium</li>
+                                <li><span class="check">✓</span> Modo stealth (invisible en screen share)</li>
+                                <li><span class="check">✓</span> Historial completo</li>
+                            ` : `
+                                <li><span class="cross">✗</span> 3 entrevistas/mes (limitado)</li>
+                                <li><span class="cross">✗</span> 15 min por sesión</li>
+                                <li><span class="cross">✗</span> Sin respuestas IA premium</li>
+                                <li><span class="cross">✗</span> Sin modo stealth</li>
+                                <li><span class="cross">✗</span> Sin historial</li>
+                            `}
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-actions">
+                        ${!isPremium ? `
+                            <button class="btn-dashboard btn-upgrade" onclick="upgradePremium()">
+                                ⚡ Obtener Premium — $14.99/mes
+                            </button>
+                        ` : ''}
+
+                        <a href="#" class="btn-dashboard btn-download ${isPremium ? '' : 'disabled'}"
+                           onclick="${isPremium ? 'downloadApp(event)' : 'event.preventDefault()'}"
+                           title="${isPremium ? 'Descargar VozInterview' : 'Requiere plan Premium'}">
+                            💾 Descargar VozInterview
+                            ${!isPremium ? '<span style="font-size:10px;opacity:0.6">(Premium)</span>' : ''}
+                        </a>
+
+                        <button class="btn-dashboard btn-logout" onclick="logout()">
+                            🚪 Cerrar sesión
+                        </button>
+                    </div>
+                </div>
+
+                <a href="index.html" class="back-link">← Volver a la página principal</a>
+            `;
+        }
+
+        async function upgradePremium() {
+            try {
+                const res = await fetch(`${API_BASE}/api/payments/create-checkout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    alert(err.detail || 'Error al crear sesión de pago');
+                    return;
+                }
+
+                const data = await res.json();
+
+                // Redirect to Stripe Checkout
+                if (data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                }
+            } catch (err) {
+                alert('Error de conexión: ' + err.message);
+            }
+        }
+
+        function downloadApp(e) {
+            e.preventDefault();
+            // TODO: Replace with actual download URL when Electron build is ready
+            alert('🚀 La descarga del instalador estará disponible próximamente.\n\nPor ahora tu cuenta Premium está activa y puedes usar el sistema directamente.');
+        }
+
+        function logout() {
+            localStorage.removeItem('voz_token');
+            localStorage.removeItem('voz_user');
+            window.location.href = 'auth.html';
+        }
+
+        // Initialize
+        loadDashboard();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,147 @@
+{
+    "name": "Interview Assistant Workflow",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "interview-assistant",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "webhook-node",
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                250,
+                300
+            ],
+            "webhookId": "interview-assistant"
+        },
+        {
+            "parameters": {
+                "content": "## 👨‍💻 Engineer Profile\n\n**Expertise:**\n- **NLP (Natural Language Processing)**\n  - Wav2Vec (Speech Recognition)\n  - RoBERTa-Biomedical (Medical NLP)\n  - Audio Processing & Transcription\n\n- **Backend Development**\n  - FastAPI (Python Web Framework)\n  - Python (Advanced)\n  - RESTful APIs & WebSockets\n\n- **Machine Learning**\n  - Language Models\n  - Audio Analysis\n  - Model Training & Fine-tuning\n\n**Experience:**\n- Real-time voice transcription systems\n- Medical text analysis\n- High-performance backend services",
+                "height": 400,
+                "width": 300
+            },
+            "id": "sticky-note",
+            "name": "Engineer Profile",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                250,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gemma-3-12b",
+                "messages": {
+                    "values": [
+                        {
+                            "role": "system",
+                            "content": "=Eres un asistente experto para entrevistas técnicas en inglés. Ayudas a un ingeniero especializado en:\n\n- NLP: Wav2Vec, RoBERTa-Biomedical\n- Backend: FastAPI, Python\n- Machine Learning: Modelos de lenguaje, procesamiento de audio\n\nTu tarea:\n1. Si la pregunta está en inglés, tradúcela al español\n2. Genera una respuesta técnica sugerida basada en la experiencia del ingeniero\n3. Identifica términos técnicos clave\n4. Mantén respuestas concisas pero técnicamente precisas\n\nRespuesta DEBE ser JSON válido con esta estructura:\n{\n  \"original_text\": \"pregunta original\",\n  \"translation\": \"traducción al español\",\n  \"suggested_answer\": \"respuesta técnica sugerida\",\n  \"key_technical_terms\": [\"término1\", \"término2\"]\n}"
+                        },
+                        {
+                            "role": "user",
+                            "content": "={{ $json.body.text }}"
+                        }
+                    ]
+                },
+                "options": {
+                    "temperature": 0.7,
+                    "maxTokens": 500
+                }
+            },
+            "id": "ai-agent-node",
+            "name": "AI Agent (Gemma 3 12B)",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 1.6,
+            "position": [
+                650,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "// Parse AI response and format as JSON\nconst aiResponse = $input.first().json.output;\n\nlet parsedResponse;\ntry {\n  // Try to parse if AI returned JSON string\n  parsedResponse = typeof aiResponse === 'string' ? JSON.parse(aiResponse) : aiResponse;\n} catch (e) {\n  // Fallback if AI didn't return valid JSON\n  const inputText = $('Webhook').first().json.body.text;\n  parsedResponse = {\n    original_text: inputText,\n    translation: \"Error en traducción\",\n    suggested_answer: aiResponse,\n    key_technical_terms: []\n  };\n}\n\n// Ensure all required fields exist\nconst response = {\n  original_text: parsedResponse.original_text || \"\",\n  translation: parsedResponse.translation || \"\",\n  suggested_answer: parsedResponse.suggested_answer || \"\",\n  key_technical_terms: parsedResponse.key_technical_terms || [],\n  timestamp: new Date().toISOString()\n};\n\nreturn { json: response };"
+            },
+            "id": "function-node",
+            "name": "Format Response",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                850,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ $json }}",
+                "options": {
+                    "responseHeaders": {
+                        "entries": [
+                            {
+                                "name": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ]
+                    }
+                }
+            },
+            "id": "respond-node",
+            "name": "Respond to Webhook",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1,
+            "position": [
+                1050,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "AI Agent (Gemma 3 12B)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "AI Agent (Gemma 3 12B)": {
+            "main": [
+                [
+                    {
+                        "node": "Format Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Format Response": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "pinData": {},
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [],
+    "triggerCount": 0,
+    "updatedAt": "2026-02-13T22:40:00.000Z",
+    "versionId": "1"
+}

@@ -1,0 +1,28 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+websockets==12.0
+SpeechRecognition==3.10.1
+python-multipart==0.0.6
+python-dotenv==1.0.0
+httpx==0.26.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+# Audio processing
+pyaudio==0.2.14
+pydub==0.25.1
+# Audio processing (ffmpeg)
+imageio-ffmpeg
+# PDF parsing
+PyPDF2==3.0.1
+# AI/ML API client
+openai==1.10.0
+# Database (PostgreSQL + SQLAlchemy async)
+sqlalchemy[asyncio]==2.0.25
+asyncpg==0.29.0
+# Auth (JWT + Password hashing)
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+email-validator==2.1.0
+bcrypt==4.0.1
+# Payments (Stripe)
+stripe

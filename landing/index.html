@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VozInterview — Tu Asistente IA para Entrevistas Técnicas en Inglés</title>
+    <meta name="description"
+        content="VozInterview traduce y genera respuestas en tiempo real durante tus entrevistas técnicas en inglés. Basado en tu CV real y el puesto al que aplicas.">
+    <meta name="keywords" content="entrevista técnica, inglés, IA, asistente, traducción, CV, interview assistant">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- ═══════════════ NAVBAR ═══════════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="nav-logo">
+                <span class="logo-voz">VOZ</span><span class="logo-interview">INTERVIEW</span>
+            </a>
+            <div class="nav-links">
+                <a href="#how-it-works">Cómo Funciona</a>
+                <a href="#features">Funcionalidades</a>
+                <a href="#pricing">Precios</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <a href="auth.html" class="btn btn-primary btn-sm">Empieza Gratis</a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menú">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#how-it-works">Cómo Funciona</a>
+            <a href="#features">Funcionalidades</a>
+            <a href="#pricing">Precios</a>
+            <a href="#faq">FAQ</a>
+            <a href="auth.html" class="btn btn-primary">Empieza Gratis</a>
+        </div>
+    </nav>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-effects">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-badge">🚀 Asistente IA en Tiempo Real</div>
+            <h1 class="hero-title">
+                Domina tus entrevistas<br>
+                técnicas en <span class="gradient-text">inglés</span>
+            </h1>
+            <p class="hero-subtitle">
+                Traduce preguntas al instante y genera respuestas personalizadas
+                basadas en <strong>tu CV real</strong> y el puesto al que aplicas.
+                Todo en tiempo real, mientras te entrevistan.
+            </p>
+            <div class="hero-ctas">
+                <a href="auth.html" class="btn btn-primary btn-lg">
+                    <span>🎯</span> Empieza Gratis
+                </a>
+                <a href="#how-it-works" class="btn btn-ghost btn-lg">
+                    <span>▶</span> Ver Cómo Funciona
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">
+                        < 3s</span>
+                            <span class="stat-label">Respuesta IA</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number">15s</span>
+                    <span class="stat-label">Por ciclo</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Privado</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Demo Card -->
+        <div class="hero-demo">
+            <div class="demo-card">
+                <div class="demo-header">
+                    <div class="demo-dot demo-dot-red"></div>
+                    <div class="demo-dot demo-dot-yellow"></div>
+                    <div class="demo-dot demo-dot-green"></div>
+                    <span class="demo-title">vozinterview.app</span>
+                </div>
+                <div class="demo-body">
+                    <div class="demo-msg demo-msg-interviewer">
+                        <span class="demo-label">🎤 Interviewer</span>
+                        <p>"Can you tell me about your experience with microservices architecture?"</p>
+                    </div>
+                    <div class="demo-msg demo-msg-translation">
+                        <span class="demo-label">🌐 Traducción</span>
+                        <p>"¿Puedes contarme sobre tu experiencia con arquitectura de microservicios?"</p>
+                    </div>
+                    <div class="demo-msg demo-msg-ai">
+                        <span class="demo-label">🤖 Respuesta Sugerida</span>
+                        <p>"In my last role at TechCorp, I designed a microservices system handling 10K req/s using
+                            Node.js, Docker, and Kubernetes..."</p>
+                    </div>
+                    <div class="demo-typing">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+    <section class="section section-dark" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Flujo sencillo</span>
+                <h2 class="section-title">¿Cómo <span class="gradient-text">funciona</span>?</h2>
+                <p class="section-subtitle">4 pasos simples para tu próxima entrevista exitosa</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card" data-animate>
+                    <div class="step-number">01</div>
+                    <div class="step-icon">📄</div>
+                    <h3>Sube tu CV</h3>
+                    <p>Arrastra tu CV en PDF y pega la descripción del puesto. La IA se personaliza a tu perfil.</p>
+                </div>
+                <div class="step-connector">
+                    <svg viewBox="0 0 100 20">
+                        <path d="M0 10 H90 L80 5 M90 10 L80 15" stroke="currentColor" fill="none" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="step-card" data-animate>
+                    <div class="step-number">02</div>
+                    <div class="step-icon">🎙️</div>
+                    <h3>Graba la entrevista</h3>
+                    <p>VozInterview captura el audio del sistema. Funciona con Zoom, Meet, Teams o cualquier plataforma.
+                    </p>
+                </div>
+                <div class="step-connector">
+                    <svg viewBox="0 0 100 20">
+                        <path d="M0 10 H90 L80 5 M90 10 L80 15" stroke="currentColor" fill="none" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="step-card" data-animate>
+                    <div class="step-number">03</div>
+                    <div class="step-icon">🤖</div>
+                    <h3>Recibe sugerencias</h3>
+                    <p>En menos de 3 segundos: traducción al español + respuesta técnica basada en tu experiencia real.
+                    </p>
+                </div>
+                <div class="step-connector">
+                    <svg viewBox="0 0 100 20">
+                        <path d="M0 10 H90 L80 5 M90 10 L80 15" stroke="currentColor" fill="none" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="step-card" data-animate>
+                    <div class="step-number">04</div>
+                    <div class="step-icon">💬</div>
+                    <h3>Responde con confianza</h3>
+                    <p>Usa la respuesta sugerida como guía. El overlay flota encima de tu videollamada, invisible para
+                        el entrevistador.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FEATURES ═══════════════ -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Potencia total</span>
+                <h2 class="section-title">Todo lo que <span class="gradient-text">necesitas</span></h2>
+                <p class="section-subtitle">Herramientas diseñadas para que brilles en cada entrevista</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon">🎤</div>
+                    <h3>Captura de Audio del Sistema</h3>
+                    <p>Capta lo que escuchas en tu computadora — Zoom, Meet, Teams. No necesitas compartir pantalla.</p>
+                </div>
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon">🌐</div>
+                    <h3>Traducción en Tiempo Real</h3>
+                    <p>Cada pregunta en inglés se traduce instantáneamente al español para que entiendas todo.</p>
+                </div>
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon">🤖</div>
+                    <h3>Respuestas con tu CV Real</h3>
+                    <p>La IA analiza tu CV y genera respuestas técnicas basadas en tu experiencia, no genéricas.</p>
+                </div>
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon">💼</div>
+                    <h3>Adaptado al Puesto</h3>
+                    <p>Pega la descripción del trabajo y las respuestas destacarán las habilidades más relevantes.</p>
+                </div>
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon">📋</div>
+                    <h3>Historial de Chats</h3>
+                    <p>Todas tus entrevistas se guardan. Revisa respuestas pasadas y mejora para la siguiente.</p>
+                </div>
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon">👻</div>
+                    <h3>Modo Stealth</h3>
+                    <p>El overlay es invisible en screen share gracias a la API nativa de Windows
+                        (WDA_EXCLUDEFROMCAPTURE). Ni screenshots ni grabaciones lo capturan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ PRICING ═══════════════ -->
+    <section class="section section-dark" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Planes flexibles</span>
+                <h2 class="section-title">Elige tu <span class="gradient-text">plan</span></h2>
+                <p class="section-subtitle">Empieza gratis y escala cuando lo necesites</p>
+            </div>
+            <div class="pricing-grid" style="max-width: 800px; margin: 0 auto; grid-template-columns: repeat(2, 1fr);">
+                <!-- Free -->
+                <div class="pricing-card" data-animate>
+                    <div class="pricing-header">
+                        <h3>Gratis</h3>
+                        <div class="pricing-price">
+                            <span class="price-amount">$0</span>
+                            <span class="price-period">/mes</span>
+                        </div>
+                        <p class="pricing-desc">Prueba el sistema</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><span class="check">✓</span> 3 entrevistas por mes</li>
+                        <li><span class="check">✓</span> 15 min por sesión</li>
+                        <li><span class="check">✓</span> Upload de CV (PDF)</li>
+                        <li class="disabled"><span class="cross">✗</span> Respuestas IA limitadas</li>
+                        <li class="disabled"><span class="cross">✗</span> Sin historial</li>
+                        <li class="disabled"><span class="cross">✗</span> Sin modo stealth</li>
+                        <li class="disabled"><span class="cross">✗</span> Sin soporte prioritario</li>
+                    </ul>
+                    <a href="auth.html" class="btn btn-outline btn-block">Empezar Gratis</a>
+                </div>
+
+                <!-- Premium -->
+                <div class="pricing-card pricing-featured" data-animate>
+                    <div class="pricing-badge">⭐ Recomendado</div>
+                    <div class="pricing-header">
+                        <h3>Premium</h3>
+                        <div class="pricing-price">
+                            <span class="price-amount">$14.<sup>99</sup></span>
+                            <span class="price-period">/mes</span>
+                        </div>
+                        <p class="pricing-desc">Acceso completo al sistema</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><span class="check">✓</span> Entrevistas ilimitadas</li>
+                        <li><span class="check">✓</span> Sin límite de tiempo</li>
+                        <li><span class="check">✓</span> Upload de CV (PDF)</li>
+                        <li><span class="check">✓</span> Respuestas IA premium</li>
+                        <li><span class="check">✓</span> Historial completo</li>
+                        <li><span class="check">✓</span> Modo stealth (invisible)</li>
+                        <li><span class="check">✓</span> Soporte prioritario</li>
+                    </ul>
+                    <a href="auth.html?plan=premium" class="btn btn-primary btn-block" id="premiumCta">Suscribirse</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ EARLY ACCESS ═══════════════ -->
+    <section class="section" id="early-access">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">🚧 Beta abierta</span>
+                <h2 class="section-title">Programa <span class="gradient-text">Early Access</span></h2>
+                <p class="section-subtitle">Estamos en fase beta. Sé de los primeros en probarlo y ayúdanos a mejorar.
+                </p>
+            </div>
+            <div class="early-access-grid">
+                <div class="ea-card" data-animate>
+                    <div class="ea-icon">🧪</div>
+                    <h3>Beta Gratuita</h3>
+                    <p>Acceso completo al producto mientras estamos en fase de desarrollo. Sin costo, sin compromiso.
+                    </p>
+                </div>
+                <div class="ea-card" data-animate>
+                    <div class="ea-icon">💡</div>
+                    <h3>Tu Feedback Importa</h3>
+                    <p>Cada sugerencia nos ayuda a construir un mejor producto. Los early adopters dan forma al futuro
+                        de VozInterview.</p>
+                </div>
+                <div class="ea-card" data-animate>
+                    <div class="ea-icon">🎁</div>
+                    <h3>Beneficios Exclusivos</h3>
+                    <p>Los primeros usuarios recibirán acceso Pro gratuito de por vida cuando lancemos la versión final.
+                    </p>
+                </div>
+            </div>
+            <div class="ea-cta">
+                <a href="#pricing" class="btn btn-primary btn-lg">🚀 Únete al Early Access</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FAQ ═══════════════ -->
+    <section class="section section-dark" id="faq">
+        <div class="container container-sm">
+            <div class="section-header">
+                <span class="section-badge">Preguntas frecuentes</span>
+                <h2 class="section-title"><span class="gradient-text">FAQ</span></h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item" data-animate>
+                    <button class="faq-question">
+                        <span>¿El entrevistador puede ver el overlay?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. VozInterview usa la API nativa de Windows <code>setContentProtection</code>
+                            (WDA_EXCLUDEFROMCAPTURE) para excluir su ventana de cualquier captura de pantalla. En
+                            Windows 10 versión 2004 o superior, el overlay es completamente invisible en screen share,
+                            screenshots y grabaciones de pantalla.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate>
+                    <button class="faq-question">
+                        <span>¿Qué pasa si me piden compartir pantalla?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>El overlay NO aparece al compartir pantalla. La protección de contenido de Windows excluye
+                            nuestra ventana de la captura. Puedes compartir tu escritorio completo y el entrevistador no
+                            verá VozInterview. Nota: en versiones de Windows anteriores a 10 2004, la ventana puede
+                            aparecer como un rectángulo negro.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate>
+                    <button class="faq-question">
+                        <span>¿Funciona con Zoom, Meet y Teams?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Sí. VozInterview usa la API <code>desktopCapturer</code> de Electron para capturar el audio
+                            de salida del sistema. Cualquier audio que tú escuches (en auriculares o parlantes) será
+                            capturado, independientemente de qué aplicación lo reproduzca — Zoom, Google Meet, Microsoft
+                            Teams, Discord, o cualquier otra.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate>
+                    <button class="faq-question">
+                        <span>¿Qué pasa con mi CV? ¿Es seguro?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Tu CV en PDF se procesa localmente: se extrae el texto en memoria y el archivo original se
+                            elimina inmediatamente. Solo se almacena el texto extraído durante la sesión activa. Al
+                            cerrar la app, todo se borra. No enviamos tu CV a servidores externos.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate>
+                    <button class="faq-question">
+                        <span>¿Solo funciona con entrevistas en inglés?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Actualmente soporta transcripción de entrevistas en inglés con traducción y respuestas al
+                            español. Estamos en beta y planeamos agregar más combinaciones de idiomas según la demanda
+                            de los usuarios.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate>
+                    <button class="faq-question">
+                        <span>¿Necesito instalar algo?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Sí. VozInterview es una aplicación de escritorio construida con Electron para Windows.
+                            Requiere una instalación local. Actualmente soportamos Windows 10/11. El soporte para macOS
+                            está en desarrollo.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate>
+                    <button class="faq-question">
+                        <span>¿En qué se diferencia de otros asistentes de entrevista?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>VozInterview tiene tres diferenciadores: (1) Modo Stealth con protección nativa de Windows
+                            que lo hace invisible en screen share, (2) respuestas personalizadas basadas en TU CV real,
+                            no genéricas, y (3) enfocado en candidatos hispanohablantes que necesitan apoyo en
+                            entrevistas en inglés.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ CTA FINAL ═══════════════ -->
+    <section class="section cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <h2>¿Listo para dominar tu próxima entrevista?</h2>
+                <p>Estamos en beta abierta. Prueba VozInterview gratis y prepárate para tu próxima entrevista técnica en
+                    inglés.</p>
+                <a href="#pricing" class="btn btn-primary btn-lg">🚀 Empieza Gratis Ahora</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="nav-logo">
+                        <span class="logo-voz">VOZ</span><span class="logo-interview">INTERVIEW</span>
+                    </div>
+                    <p>Tu asistente IA para entrevistas técnicas en inglés.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Producto</h4>
+                    <a href="#features">Funcionalidades</a>
+                    <a href="#pricing">Precios</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="#">Términos de Servicio</a>
+                    <a href="#">Política de Privacidad</a>
+                    <a href="#">Cookies</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Soporte</h4>
+                    <a href="mailto:soporte@vozinterview.app">soporte@vozinterview.app</a>
+                    <a href="#">Centro de Ayuda</a>
+                    <a href="#">Status</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 VozInterview. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
