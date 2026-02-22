@@ -5,6 +5,7 @@ import { AudioCapture } from './components/AudioCapture';
 import { NewChatModal } from './components/NewChatModal';
 import { ChatHistory } from './components/ChatHistory';
 import { AuthScreen } from './components/AuthScreen';
+import { ImageSolver } from './components/ImageSolver';
 import { useWebSocket } from './hooks/useWebSocket';
 import { useChatHistory } from './hooks/useChatHistory';
 import { useAuth } from './hooks/useAuth';
@@ -24,6 +25,7 @@ function App() {
     const statusTimeoutRef = useRef(null);
     const [showNewChatModal, setShowNewChatModal] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
+    const [appMode, setAppMode] = useState('interview'); // 'interview' | 'solver'
 
     const { isConnected, lastMessage, sendAudio, sendText, sendMessage, error } = useWebSocket(auth.token);
     const {
@@ -158,56 +160,108 @@ function App() {
         return <SetupScreen onComplete={handleSetupComplete} sessionId={sessionId} />;
     }
 
-    // ─── INTERVIEW SCREEN ───
+    // ─── MAIN APP ───
     return (
         <div className="w-screen h-screen flex flex-col items-center justify-start p-3 gap-2">
-            {/* Main Overlay */}
-            <Overlay
-                messages={activeChat?.messages || []}
-                status={status}
-                isConnected={isConnected}
-                chatName={activeChat?.name}
-                onNewChat={handleNewChat}
-                onShowHistory={() => setShowHistory(true)}
-                user={auth.user}
-                onLogout={auth.logout}
-            />
 
-            {/* Audio Controls */}
-            <div className="glass rounded-xl p-3 border border-cyber-blue/30 w-[480px] flex-shrink-0">
-                <div className="flex items-center gap-2">
-                    <div className="flex-1">
-                        <AudioCapture
-                            onTranscription={handleTranscription}
-                            onAudioCapture={handleAudioCapture}
-                            isRecording={isRecording}
-                            setIsRecording={setIsRecording}
-                        />
-                    </div>
-                    {/* Back to setup */}
+            {/* ─── MODE SWITCHER TAB BAR ─── */}
+            <div style={{
+                display: 'flex',
+                gap: '4px',
+                background: 'rgba(255,255,255,0.04)',
+                borderRadius: '12px',
+                padding: '3px',
+                border: '1px solid rgba(255,255,255,0.08)',
+                width: '480px',
+                flexShrink: 0,
+            }}>
+                {[
+                    { id: 'interview', icon: '🎧', label: 'Entrevista' },
+                    { id: 'solver', icon: '📸', label: 'Solver' },
+                ].map((tab) => (
                     <button
-                        onClick={handleBackToSetup}
-                        className="text-[10px] text-gray-500 hover:text-cyber-cyan font-mono 
-                            px-2 py-1 rounded-lg glass border border-gray-700 
-                            hover:border-cyber-cyan/30 transition-all"
-                        title="Cambiar CV / Puesto"
+                        key={tab.id}
+                        onClick={() => setAppMode(tab.id)}
+                        style={{
+                            flex: 1,
+                            padding: '8px 12px',
+                            borderRadius: '10px',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                            fontSize: '0.85rem',
+                            fontFamily: "'Inter', 'Segoe UI', sans-serif",
+                            transition: 'all 0.2s ease',
+                            background: appMode === tab.id
+                                ? 'linear-gradient(135deg, rgba(0,243,255,0.15), rgba(0,128,255,0.1))'
+                                : 'transparent',
+                            color: appMode === tab.id ? '#00f3ff' : 'rgba(255,255,255,0.4)',
+                            boxShadow: appMode === tab.id
+                                ? '0 0 12px rgba(0,243,255,0.1)'
+                                : 'none',
+                        }}
                     >
-                        ⚙️
+                        {tab.icon} {tab.label}
                     </button>
-                </div>
+                ))}
+            </div>
 
-                {/* Context indicator */}
-                {setupInfo && (setupInfo.cvUploaded || setupInfo.jobDescriptionSet) && (
-                    <div className="mt-2 flex gap-2 text-[9px] font-mono">
-                        {setupInfo.cvUploaded && (
-                            <span className="text-green-400/70">✓ CV cargado</span>
-                        )}
-                        {setupInfo.jobDescriptionSet && (
-                            <span className="text-green-400/70">✓ Puesto configurado</span>
+            {/* ─── INTERVIEW MODE ─── */}
+            {appMode === 'interview' && (
+                <>
+                    <Overlay
+                        messages={activeChat?.messages || []}
+                        status={status}
+                        isConnected={isConnected}
+                        chatName={activeChat?.name}
+                        onNewChat={handleNewChat}
+                        onShowHistory={() => setShowHistory(true)}
+                        user={auth.user}
+                        onLogout={auth.logout}
+                    />
+
+                    {/* Audio Controls */}
+                    <div className="glass rounded-xl p-3 border border-cyber-blue/30 w-[480px] flex-shrink-0">
+                        <div className="flex items-center gap-2">
+                            <div className="flex-1">
+                                <AudioCapture
+                                    onTranscription={handleTranscription}
+                                    onAudioCapture={handleAudioCapture}
+                                    isRecording={isRecording}
+                                    setIsRecording={setIsRecording}
+                                />
+                            </div>
+                            <button
+                                onClick={handleBackToSetup}
+                                className="text-[10px] text-gray-500 hover:text-cyber-cyan font-mono 
+                                    px-2 py-1 rounded-lg glass border border-gray-700 
+                                    hover:border-cyber-cyan/30 transition-all"
+                                title="Cambiar CV / Puesto"
+                            >
+                                ⚙️
+                            </button>
+                        </div>
+
+                        {setupInfo && (setupInfo.cvUploaded || setupInfo.jobDescriptionSet) && (
+                            <div className="mt-2 flex gap-2 text-[9px] font-mono">
+                                {setupInfo.cvUploaded && (
+                                    <span className="text-green-400/70">✓ CV cargado</span>
+                                )}
+                                {setupInfo.jobDescriptionSet && (
+                                    <span className="text-green-400/70">✓ Puesto configurado</span>
+                                )}
+                            </div>
                         )}
                     </div>
-                )}
-            </div>
+                </>
+            )}
+
+            {/* ─── SOLVER MODE ─── */}
+            {appMode === 'solver' && (
+                <div className="glass rounded-xl border border-cyber-blue/30 w-[480px] overflow-y-auto" style={{ maxHeight: 'calc(100vh - 80px)' }}>
+                    <ImageSolver token={auth.token} />
+                </div>
+            )}
 
             {/* Error */}
             {error && (

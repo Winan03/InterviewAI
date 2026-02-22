@@ -400,10 +400,34 @@
             }
         }
 
-        function downloadApp(e) {
+        async function downloadApp(e) {
             e.preventDefault();
-            // TODO: Replace with actual download URL when Electron build is ready
-            alert('🚀 La descarga del instalador estará disponible próximamente.\n\nPor ahora tu cuenta Premium está activa y puedes usar el sistema directamente.');
+
+            try {
+                const res = await fetch(`${API_BASE}/api/payments/download`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    alert(err.detail || 'Error al descargar el instalador');
+                    return;
+                }
+
+                // Trigger browser download
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'VozInterviewSetup.exe';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+            } catch (err) {
+                alert('Error de conexión: ' + err.message);
+            }
         }
 
         function logout() {

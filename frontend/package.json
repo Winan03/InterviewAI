@@ -29,6 +29,7 @@
         "vite": "^5.0.8",
         "wait-on": "^7.2.0"
     },
+    "author": "Jefferson Edwin",
     "build": {
         "appId": "com.vozinterview.app",
         "productName": "VozInterview",
@@ -37,6 +38,7 @@
             "electron/**/*"
         ],
         "directories": {
+            "output": "release",
             "buildResources": "assets"
         },
         "win": {

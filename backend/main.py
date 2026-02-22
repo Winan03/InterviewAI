@@ -19,6 +19,7 @@ from pdf_parser import extract_text_from_pdf, extract_text_from_multiple_pdfs
 from database import init_db
 from auth import router as auth_router, decode_token
 from payments import router as payments_router
+from solver import router as solver_router
 
 # Configure logging
 logging.basicConfig(
@@ -48,6 +49,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(payments_router)
+app.include_router(solver_router)
 
 # Serve landing page static files
 from fastapi.staticfiles import StaticFiles

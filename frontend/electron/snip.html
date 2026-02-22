@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Screen Capture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            cursor: crosshair;
+            user-select: none;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            pointer-events: none;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        #hint span {
+            color: #00f3ff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="hint">Arrastra para seleccionar el área · <span>ESC</span> para cancelar</div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const hint = document.getElementById('hint');
+
+        let screenshot = null;  // Image element with the frozen screenshot
+        let imgWidth = 0, imgHeight = 0; // Native image dimensions
+        let isDrawing = false;
+        let startX = 0, startY = 0;
+        let currentX = 0, currentY = 0;
+
+        // Receive the screenshot from main process
+        ipcRenderer.on('set-screenshot', (event, dataUrl) => {
+            const img = new Image();
+            img.onload = () => {
+                screenshot = img;
+                imgWidth = img.naturalWidth;
+                imgHeight = img.naturalHeight;
+
+                // Set canvas internal resolution to match the NATIVE screenshot resolution
+                canvas.width = imgWidth;
+                canvas.height = imgHeight;
+
+                // CSS will still display it at 100vw x 100vh (screen size)
+                // This means 1 canvas pixel = 1 screenshot pixel — no scaling issues
+
+                drawFrame();
+            };
+            img.src = dataUrl;
+        });
+
+        // Convert CSS mouse coordinates to canvas (native screenshot) coordinates
+        function cssToCanvas(cssX, cssY) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: Math.round(cssX * scaleX),
+                y: Math.round(cssY * scaleY),
+            };
+        }
+
+        function drawFrame() {
+            if (!screenshot) return;
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Draw the screenshot as background (1:1 pixel match)
+            ctx.drawImage(screenshot, 0, 0, w, h);
+
+            // Dark overlay on everything
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.fillRect(0, 0, w, h);
+
+            if (isDrawing) {
+                // Convert to canvas coords
+                const start = cssToCanvas(startX, startY);
+                const curr = cssToCanvas(currentX, currentY);
+
+                const rx = Math.min(start.x, curr.x);
+                const ry = Math.min(start.y, curr.y);
+                const rw = Math.abs(curr.x - start.x);
+                const rh = Math.abs(curr.y - start.y);
+
+                if (rw > 2 && rh > 2) {
+                    // Clear the selected region (show screenshot without overlay)
+                    ctx.clearRect(rx, ry, rw, rh);
+                    ctx.drawImage(screenshot, rx, ry, rw, rh, rx, ry, rw, rh);
+
+                    // Selection border
+                    ctx.strokeStyle = '#00f3ff';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([6, 3]);
+                    ctx.strokeRect(rx, ry, rw, rh);
+                    ctx.setLineDash([]);
+
+                    // Corner dots
+                    const dotSize = 5;
+                    ctx.fillStyle = '#00f3ff';
+                    [[rx, ry], [rx + rw, ry], [rx, ry + rh], [rx + rw, ry + rh]].forEach(([cx, cy]) => {
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, dotSize, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+
+                    // Size indicator (show in CSS pixels for user friendliness)
+                    const rect = canvas.getBoundingClientRect();
+                    const dispW = Math.round(rw / (canvas.width / rect.width));
+                    const dispH = Math.round(rh / (canvas.height / rect.height));
+                    ctx.font = '16px Segoe UI';
+                    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                    ctx.fillText(`${dispW} × ${dispH}`, rx + 6, ry - 8);
+                }
+            }
+        }
+
+        // Mouse events (CSS pixel coordinates)
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            currentX = e.clientX;
+            currentY = e.clientY;
+            hint.style.display = 'none';
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            currentX = e.clientX;
+            currentY = e.clientY;
+            drawFrame();
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (!isDrawing) return;
+            isDrawing = false;
+
+            // Convert final coordinates to canvas (native) space
+            const start = cssToCanvas(startX, startY);
+            const curr = cssToCanvas(e.clientX, e.clientY);
+
+            const rx = Math.min(start.x, curr.x);
+            const ry = Math.min(start.y, curr.y);
+            const rw = Math.abs(curr.x - start.x);
+            const rh = Math.abs(curr.y - start.y);
+
+            // Minimum selection size
+            if (rw < 10 || rh < 10) {
+                drawFrame();
+                hint.style.display = 'block';
+                return;
+            }
+
+            // Send region in native (screenshot) pixel coordinates
+            ipcRenderer.send('snip-complete', {
+                x: rx,
+                y: ry,
+                width: rw,
+                height: rh,
+            });
+        });
+
+        // ESC to cancel
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                ipcRenderer.send('snip-cancel');
+            }
+        });
+    </script>
+</body>
+
+</html>

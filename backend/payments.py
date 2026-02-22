@@ -4,10 +4,12 @@ Handles checkout sessions, webhooks, and subscription status.
 """
 from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 import stripe
 import logging
+from pathlib import Path
 
 from config import get_settings
 from database import get_db
@@ -185,3 +187,30 @@ async def payment_status(user: User = Depends(get_current_user)):
         "expires_at": user.plan_expires_at.isoformat() if user.plan_expires_at else None,
         "stripe_customer_id": user.stripe_customer_id,
     }
+
+
+# ─── Download Installer ───
+@router.get("/download")
+async def download_installer(user: User = Depends(get_current_user)):
+    """Serve the Electron installer .exe to Premium users."""
+    if not user.has_active_premium:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Se requiere una cuenta Premium activa para descargar la aplicación",
+        )
+
+    # Path to the installer - adjusted for project structure
+    installer_path = Path(__file__).parent.parent / "frontend" / "release" / "VozInterview Setup 1.0.0.exe"
+    
+    if not installer_path.exists():
+        logger.error(f"Installer not found at: {installer_path}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="El instalador aún no está listo. Por favor contacta a soporte.",
+        )
+
+    return FileResponse(
+        path=str(installer_path),
+        filename="VozInterviewSetup.exe",
+        media_type="application/octet-stream",
+    )

@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     HF_API_TOKEN: str = ""
     HF_MODEL: str = "google/gemma-3-12b-it:featherless-ai"
     HF_API_URL: str = "https://router.huggingface.co/v1"
+    HF_VISION_MODEL: str = "Qwen/Qwen2.5-VL-7B-Instruct"
     
     # AI/ML API Configuration (Fallback)
     AIML_API_KEY: str = ""
