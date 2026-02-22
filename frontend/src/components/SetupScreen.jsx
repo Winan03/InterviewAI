@@ -1,7 +1,10 @@
 import { useState, useRef } from 'react';
 import { WindowControls } from './WindowControls';
 
-const API_URL = 'http://localhost:8000';
+const RENDER_URL = 'https://voz-interview.onrender.com';
+const isLocal = typeof window !== 'undefined'
+    && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_URL = isLocal ? 'http://localhost:8000' : RENDER_URL;
 
 /**
  * Setup screen shown before starting an interview.

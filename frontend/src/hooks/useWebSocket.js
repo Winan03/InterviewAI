@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 
-const WS_BASE = 'ws://localhost:8000/ws/audio';
+const isLocal = typeof window !== 'undefined'
+    && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const WS_BASE = isLocal
+    ? 'ws://localhost:8000/ws/audio'
+    : 'wss://voz-interview.onrender.com/ws/audio';
 
 export function useWebSocket(token) {
     const [isConnected, setIsConnected] = useState(false);

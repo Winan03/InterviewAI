@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_BASE = 'http://localhost:8000';
+const RENDER_URL = 'https://voz-interview.onrender.com';
+const isLocal = typeof window !== 'undefined'
+    && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_BASE = isLocal ? 'http://localhost:8000' : RENDER_URL;
 const TOKEN_KEY = 'voz_token';
 const USER_KEY = 'voz_user';
 

@@ -18,9 +18,9 @@ export function ImageSolver({ token }) {
     const [dragOver, setDragOver] = useState(false);
     const fileInputRef = useRef(null);
 
-    const API_BASE = window.location.hostname === 'localhost'
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:8000'
-        : window.location.origin;
+        : 'https://voz-interview.onrender.com';
 
     // Listen for snip results from Electron main process
     useEffect(() => {
