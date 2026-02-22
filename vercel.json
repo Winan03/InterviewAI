@@ -1,0 +1,38 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "backend/main.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "landing/**",
+            "use": "@vercel/static"
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "backend/main.py"
+        },
+        {
+            "source": "/landing/(.*)",
+            "destination": "landing/$1"
+        },
+        {
+            "source": "/auth",
+            "destination": "landing/auth.html"
+        },
+        {
+            "source": "/dashboard",
+            "destination": "landing/dashboard.html"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "landing/$1"
+        }
+    ],
+    "env": {
+        "PYTHON_VERSION": "3.10"
+    }
+}
