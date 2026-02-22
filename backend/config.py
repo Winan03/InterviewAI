@@ -39,6 +39,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3000",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:8000",
+        "https://voz-interview.onrender.com",
     ]
     
     # Database Configuration
