@@ -10,12 +10,18 @@ logger = logging.getLogger(__name__)
 
 settings = get_settings()
 
+# Handle SSL for cloud DBs (like Neon/Supabase) with asyncpg
+connect_args = {}
+if "sslmode" in settings.DATABASE_URL or "ssl=true" in settings.DATABASE_URL.lower():
+    connect_args["ssl"] = True
+
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     pool_size=5,
     max_overflow=10,
     pool_recycle=300,
+    connect_args=connect_args,
 )
 
 async_session = async_sessionmaker(
