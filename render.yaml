@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: voz-interview
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.11
+      - key: BACKEND_HOST
+        value: 0.0.0.0
+      # Database, AI keys and Stripe keys must be added in the Render Dashboard
