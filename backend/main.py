@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 import logging
 import asyncio
 import base64
@@ -123,12 +123,8 @@ session_contexts: Dict[str, Dict[str, str]] = {}
 
 @app.get("/")
 async def root():
-    """Health check endpoint"""
-    return {
-        "status": "online",
-        "service": "VozInterview API",
-        "version": "1.0.0"
-    }
+    """Redirect to landing page"""
+    return RedirectResponse(url="/landing/")
 
 
 @app.get("/health")
