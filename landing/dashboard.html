@@ -402,34 +402,10 @@
             }
         }
 
-        async function downloadApp(e) {
+        function downloadApp(e) {
             e.preventDefault();
-
-            try {
-                const res = await fetch(`${API_BASE}/api/payments/download`, {
-                    headers: { 'Authorization': `Bearer ${token}` },
-                });
-
-                if (!res.ok) {
-                    const err = await res.json();
-                    alert(err.detail || 'Error al descargar el instalador');
-                    return;
-                }
-
-                // Trigger browser download
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'VozInterviewSetup.exe';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-
-            } catch (err) {
-                alert('Error de conexión: ' + err.message);
-            }
+            // Direct download from GitHub Releases
+            window.open('https://github.com/Winan03/InterviewAI/releases/latest/download/VozInterview.Setup.1.0.0.exe', '_blank');
         }
 
         function logout() {
